@@ -286,8 +286,11 @@ void Game::CreateGeometry()
 	double spawnRange = 10.0f;
 	srand(time(0));
 
+	
+
+
 	// Spheres 
-	for (int i = 0; i < 10; i++)
+	for (int i = 0; i < 3; i++)
 	{
 		std::shared_ptr<Material> basicMat = std::make_shared<Material>(
 			pipelineState,
@@ -315,7 +318,7 @@ void Game::CreateGeometry()
 	}
 
 	// Torus's
-	for (int i = 0; i < 3; i++)
+	for (int i = 0; i < 0; i++)
 	{
 		std::shared_ptr<Material> basicMat = std::make_shared<Material>(
 			pipelineState,
@@ -397,6 +400,27 @@ void Game::CreateGeometry()
 	//	randMat->FinalizeMaterial();
 	//	entities.push_back(std::make_shared<Entity>(sphere, randMat));
 	//}
+
+	// Ground
+	std::shared_ptr<Material> mat = std::make_shared<Material>(
+		pipelineState,
+		DirectX::XMFLOAT3(((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX), // Color
+		DirectX::XMFLOAT2(1.0f, 1.0f),
+		DirectX::XMFLOAT2(0.0f, 0.0f));
+
+
+	mat->AddTexture(dx12Helper.LoadTexture(FixPath(L"../../Assets/Textures/Foil002_4K-JPG_Color.jpg").c_str()), 0);
+	mat->AddTexture(dx12Helper.LoadTexture(FixPath(L"../../Assets/Textures/Foil002_4K-JPG_NormalDX.jpg").c_str()), 1);
+	mat->AddTexture(dx12Helper.LoadTexture(FixPath(L"../../Assets/Textures/Foil002_4K-JPG_Roughness.jpg").c_str()), 2);
+	mat->AddTexture(dx12Helper.LoadTexture(FixPath(L"../../Assets/Textures/Foil002_4K-JPG_Metalness.jpg").c_str()), 3);
+
+	mat->FinalizeMaterial();
+
+
+	// Set meshes to entities 
+	entities.push_back(std::make_shared<Entity>(sphere, mat));
+	entities[entities.size() - 1]->GetTransform()->SetPosition(0.0f, -1002.0f, 0.0f);
+	entities[entities.size() - 1]->GetTransform()->SetScale(1000.0f);
 
 	// Meshes create their own BLAS's; we just need to create the TLAS for the scene here
 	RaytracingHelper::GetInstance().CreateTopLevelAccelerationStructureForScene(entities);

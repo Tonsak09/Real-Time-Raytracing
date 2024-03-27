@@ -297,6 +297,7 @@ void RaytracingHelper::CreateRaytracingPipelineState(std::wstring raytracingShad
 		D3D12_RAYTRACING_SHADER_CONFIG shaderConfigDesc = {};
 		shaderConfigDesc.MaxPayloadSizeInBytes = sizeof(DirectX::XMFLOAT3);// Float3 color
 		shaderConfigDesc.MaxAttributeSizeInBytes = sizeof(DirectX::XMFLOAT2); // Float2 for barycentric coords
+		shaderConfigDesc.MaxPayloadSizeInBytes = sizeof(XMFLOAT3) + sizeof(unsigned int) * 2;
 
 		D3D12_STATE_SUBOBJECT shaderConfigSubObj = {};
 		shaderConfigSubObj.Type = D3D12_STATE_SUBOBJECT_TYPE_RAYTRACING_SHADER_CONFIG;
