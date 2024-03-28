@@ -691,8 +691,8 @@ void RaytracingHelper::CreateTopLevelAccelerationStructureForScene(std::vector<s
 		// Set up the entity data for this entity, too
 		// - mesh index tells us which cbuffer
 		// - instance ID tells us which instance in that cbuffer
-		XMFLOAT3 c = scene[i]->GetMaterial()->GetColorTint();
-		entityData[meshBlasIndex].color[id.InstanceID] = XMFLOAT4(c.x, c.y, c.z, (float)((i+1) % 2)); // Using alpha channel as "roughness"
+		XMFLOAT4 c = scene[i]->GetMaterial()->GetColorTint();
+		entityData[meshBlasIndex].color[id.InstanceID] = c; // Using alpha channel as "roughness"
 
 		// On to the next instance for this mesh
 		instanceIDs[meshBlasIndex]++;

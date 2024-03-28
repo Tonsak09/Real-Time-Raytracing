@@ -177,6 +177,10 @@ void CalcRayFromCamera(float2 rayIndices, out float3 origin, out float3 directio
 	direction = normalize(worldPos.xyz - origin);
 }
 
+float3 reflect(float3 v, float3 n)
+{
+	return v - 2.0 * dot(v, n) * n;
+}
 
 
 // === Shaders ===
@@ -224,11 +228,10 @@ void RayGen()
 		totalColor += payload.color;
 	}
 
-	
 
 	// Set the final color of the buffer (gamma corrected)
 	//OutputColor[rayIndices] = float4(pow(payload.color, 1.0f / 2.2f), 1);
-	OutputColor[rayIndices] = float4(pow(totalColor /= raysPerPixel, 1.0f / 2.2f), 1);
+	OutputColor[rayIndices] = float4(pow(totalColor / raysPerPixel, 1.0f / 2.2f), 1);
 }
 
 
@@ -242,7 +245,15 @@ void Miss(inout RayPayload payload)
 
 	// Interpolate based on the direction of the ray
 	float interpolation = dot(normalize(WorldRayDirection()), float3(0, 1, 0)) * 0.5f + 0.5f;
-	payload.color = lerp(downColor, upColor, interpolation);
+
+	if (payload.recursionDepth == 0)
+	{
+		payload.color = lerp(downColor, upColor, interpolation);
+	}
+	else
+	{
+		payload.color *= lerp(downColor, upColor, interpolation);
+	}
 }
 
 
@@ -255,6 +266,7 @@ void ClosestHit(inout RayPayload payload, BuiltInTriangleIntersectionAttributes 
 		payload.color = float3(0, 0, 0);
 		return;
 	}
+
 
 	// Grab the index of the triangle we hit
 	uint triangleIndex = PrimitiveIndex();
@@ -270,12 +282,27 @@ void ClosestHit(inout RayPayload payload, BuiltInTriangleIntersectionAttributes 
 
 	// Get the data for this entity
 	uint instanceID = InstanceID();
-	payload.color *= entityColor[instanceID].rgb;
+
+	if (payload.recursionDepth == 0)
+	{
+		payload.color = entityColor[instanceID].rgb;
+	}
+	else
+	{
+		payload.color *= entityColor[instanceID].rgb;
+	}
 
 	// Create another recurssive ray 
+	float2 uv = (float2)DispatchRaysIndex() / (float2)DispatchRaysDimensions();
+	float2 rng = rand2(uv * (payload.recursionDepth + 1) + payload.rayPerPixelIndex + RayTCurrent());
+
+	float3 randBounce = RandomCosineWeightedHemisphere(rand(rng), rand(rng.yx), interpolatedVert.normal);
+	float3 refl = reflect(WorldRayDirection(), interpolatedVert.normal);
+	float3 dir = normalize(lerp(refl, randBounce, entityColor[instanceID].a));
+
 	RayDesc ray;
-	ray.Origin = WorldRayOrigin() + WorldRayDirection() * RayTCurrent();
-	ray.Direction = reflect(WorldRayDirection(), interpolatedVert.normal);
+	ray.Origin = WorldRayOrigin() + WorldRayDirection() * RayTCurrent() + (dir * 0.1f);
+	ray.Direction = dir;
 	ray.TMin = 0.0001f;
 	ray.TMax = 1000.0f;
 

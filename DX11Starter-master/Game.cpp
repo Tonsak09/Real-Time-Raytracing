@@ -282,47 +282,18 @@ void Game::CreateGeometry()
 	std::shared_ptr<Mesh> sphere = std::make_shared<Mesh>(FixPath(L"../../Assets/Models/sphere.obj").c_str());
 	std::shared_ptr<Mesh> helix = std::make_shared<Mesh>(FixPath(L"../../Assets/Models/helix.obj").c_str());
 	std::shared_ptr<Mesh> torus = std::make_shared<Mesh>(FixPath(L"../../Assets/Models/torus.obj").c_str());
+	std::shared_ptr<Mesh> cylinder = std::make_shared<Mesh>(FixPath(L"../../Assets/Models/cylinder.obj").c_str());
 
 	double spawnRange = 10.0f;
 	srand(time(0));
 
 	
-
-
-	// Spheres 
-	for (int i = 0; i < 3; i++)
-	{
-		std::shared_ptr<Material> basicMat = std::make_shared<Material>(
-			pipelineState,
-			DirectX::XMFLOAT3(((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX), // Color
-			DirectX::XMFLOAT2(1.0f, 1.0f),
-			DirectX::XMFLOAT2(0.0f, 0.0f));
-
-
-		basicMat->AddTexture(dx12Helper.LoadTexture(FixPath(L"../../Assets/Textures/Foil002_4K-JPG_Color.jpg").c_str()), 0);
-		basicMat->AddTexture(dx12Helper.LoadTexture(FixPath(L"../../Assets/Textures/Foil002_4K-JPG_NormalDX.jpg").c_str()), 1);
-		basicMat->AddTexture(dx12Helper.LoadTexture(FixPath(L"../../Assets/Textures/Foil002_4K-JPG_Roughness.jpg").c_str()), 2);
-		basicMat->AddTexture(dx12Helper.LoadTexture(FixPath(L"../../Assets/Textures/Foil002_4K-JPG_Metalness.jpg").c_str()), 3);
-
-		basicMat->FinalizeMaterial();
-
-		double xRand = ((double)rand()) / RAND_MAX;
-		double x = -spawnRange + (spawnRange - -spawnRange) * xRand;
-
-		double zRand = ((double)rand()) / RAND_MAX;
-		double z = -spawnRange + (spawnRange - -spawnRange) * zRand;
-
-		// Set meshes to entities 
-		entities.push_back(std::make_shared<Entity>(sphere, basicMat));
-		entities[entities.size() - 1]->GetTransform()->SetPosition(x, 0.0f, z);
-	}
-
 	// Torus's
-	for (int i = 0; i < 0; i++)
+	for (int i = 0; i < 5; i++)
 	{
 		std::shared_ptr<Material> basicMat = std::make_shared<Material>(
 			pipelineState,
-			DirectX::XMFLOAT3(((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX), // Color
+			DirectX::XMFLOAT4(((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX), // Color
 			DirectX::XMFLOAT2(1.0f, 1.0f),
 			DirectX::XMFLOAT2(0.0f, 0.0f));
 
@@ -350,11 +321,69 @@ void Game::CreateGeometry()
 
 	}
 
-	for (int i = 0; i < 0; i++)
+	// Spheres 
+	for (int i = 0; i < 5; i++)
 	{
 		std::shared_ptr<Material> basicMat = std::make_shared<Material>(
 			pipelineState,
-			DirectX::XMFLOAT3(((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX), // Color
+			DirectX::XMFLOAT4(((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX), // Color
+			DirectX::XMFLOAT2(1.0f, 1.0f),
+			DirectX::XMFLOAT2(0.0f, 0.0f));
+
+
+		basicMat->AddTexture(dx12Helper.LoadTexture(FixPath(L"../../Assets/Textures/Foil002_4K-JPG_Color.jpg").c_str()), 0);
+		basicMat->AddTexture(dx12Helper.LoadTexture(FixPath(L"../../Assets/Textures/Foil002_4K-JPG_NormalDX.jpg").c_str()), 1);
+		basicMat->AddTexture(dx12Helper.LoadTexture(FixPath(L"../../Assets/Textures/Foil002_4K-JPG_Roughness.jpg").c_str()), 2);
+		basicMat->AddTexture(dx12Helper.LoadTexture(FixPath(L"../../Assets/Textures/Foil002_4K-JPG_Metalness.jpg").c_str()), 3);
+
+		basicMat->FinalizeMaterial();
+
+		double xRand = ((double)rand()) / RAND_MAX;
+		double x = -spawnRange + (spawnRange - -spawnRange) * xRand;
+
+		double zRand = ((double)rand()) / RAND_MAX;
+		double z = -spawnRange + (spawnRange - -spawnRange) * zRand;
+
+		// Set meshes to entities 
+		entities.push_back(std::make_shared<Entity>(sphere, basicMat));
+		entities[entities.size() - 1]->GetTransform()->SetPosition(x, 0.0f, z);
+	}
+
+	// Cylinders 
+	for (int i = 0; i < 5; i++)
+	{
+		std::shared_ptr<Material> basicMat = std::make_shared<Material>(
+			pipelineState,
+			DirectX::XMFLOAT4(((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX), // Color
+			DirectX::XMFLOAT2(1.0f, 1.0f),
+			DirectX::XMFLOAT2(0.0f, 0.0f));
+
+
+		basicMat->AddTexture(dx12Helper.LoadTexture(FixPath(L"../../Assets/Textures/Foil002_4K-JPG_Color.jpg").c_str()), 0);
+		basicMat->AddTexture(dx12Helper.LoadTexture(FixPath(L"../../Assets/Textures/Foil002_4K-JPG_NormalDX.jpg").c_str()), 1);
+		basicMat->AddTexture(dx12Helper.LoadTexture(FixPath(L"../../Assets/Textures/Foil002_4K-JPG_Roughness.jpg").c_str()), 2);
+		basicMat->AddTexture(dx12Helper.LoadTexture(FixPath(L"../../Assets/Textures/Foil002_4K-JPG_Metalness.jpg").c_str()), 3);
+
+		basicMat->FinalizeMaterial();
+
+		double xRand = ((double)rand()) / RAND_MAX;
+		double x = -spawnRange + (spawnRange - -spawnRange) * xRand;
+
+		double zRand = ((double)rand()) / RAND_MAX;
+		double z = -spawnRange + (spawnRange - -spawnRange) * zRand;
+
+		// Set meshes to entities 
+		entities.push_back(std::make_shared<Entity>(cylinder, basicMat));
+		entities[entities.size() - 1]->GetTransform()->SetPosition(x, 0.0f, z);
+	}
+
+	
+	// Helix 
+	for (int i = 0; i < 5; i++)
+	{
+		std::shared_ptr<Material> basicMat = std::make_shared<Material>(
+			pipelineState,
+			DirectX::XMFLOAT4(((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX), // Color
 			DirectX::XMFLOAT2(1.0f, 1.0f),
 			DirectX::XMFLOAT2(0.0f, 0.0f));
 
@@ -404,7 +433,7 @@ void Game::CreateGeometry()
 	// Ground
 	std::shared_ptr<Material> mat = std::make_shared<Material>(
 		pipelineState,
-		DirectX::XMFLOAT3(((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX), // Color
+		DirectX::XMFLOAT4(((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, 0.0f), // Color
 		DirectX::XMFLOAT2(1.0f, 1.0f),
 		DirectX::XMFLOAT2(0.0f, 0.0f));
 
@@ -418,9 +447,9 @@ void Game::CreateGeometry()
 
 
 	// Set meshes to entities 
-	entities.push_back(std::make_shared<Entity>(sphere, mat));
-	entities[entities.size() - 1]->GetTransform()->SetPosition(0.0f, -1002.0f, 0.0f);
-	entities[entities.size() - 1]->GetTransform()->SetScale(1000.0f);
+	entities.push_back(std::make_shared<Entity>(cylinder, mat));
+	entities[entities.size() - 1]->GetTransform()->SetPosition(0.0f, -3.0f, 0.0f);
+	entities[entities.size() - 1]->GetTransform()->SetScale(1000.0f, 1.0f, 1000.0f);
 
 	// Meshes create their own BLAS's; we just need to create the TLAS for the scene here
 	RaytracingHelper::GetInstance().CreateTopLevelAccelerationStructureForScene(entities);
@@ -525,7 +554,9 @@ void Game::Draw(float deltaTime, float totalTime)
 
 	// Reset allocator associated with the current buffer
 	// and set up the command list to use that allocator
-	//commandAllocator->Reset();
+	
+	dx12Helper.WaitForGPU();
+	commandAllocator->Reset();
 	commandList->Reset(commandAllocator.Get(), 0);
 
 	// Grab the current back buffer for this frame
@@ -553,166 +584,6 @@ void Game::Draw(float deltaTime, float totalTime)
 		if (currentSwapBuffer >= numBackBuffers)
 			currentSwapBuffer = 0;
 	}
-
-	//// Grab the current back buffer for this frame
-	//Microsoft::WRL::ComPtr<ID3D12Resource> currentBackBuffer = backBuffers[currentSwapBuffer];
-	//// Clearing the render target
-	////{
-	////	// Transition the back buffer from present to render target
-	////	D3D12_RESOURCE_BARRIER rb = {};
-	////	rb.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	////	rb.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-	////	rb.Transition.pResource = currentBackBuffer.Get();
-	////	rb.Transition.StateBefore = D3D12_RESOURCE_STATE_PRESENT;
-	////	rb.Transition.StateAfter = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	////	rb.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-	////	commandList->ResourceBarrier(1, &rb);
-	////	// Background color (Cornflower Blue in this case) for clearing
-	////	float color[] = { 0.4f, 0.6f, 0.75f, 1.0f };
-	////	// Clear the RTV
-	////	commandList->ClearRenderTargetView(
-	////		rtvHandles[currentSwapBuffer],
-	////		color,
-	////		0, 0); // No scissor rectangles
-	////	// Clear the depth buffer, too
-	////	commandList->ClearDepthStencilView(
-	////		dsvHandle,
-	////		D3D12_CLEAR_FLAG_DEPTH,
-	////		1.0f, // Max depth = 1.0f
-	////		0, // Not clearing stencil, but need a value
-	////		0, 0); // No scissor rects
-	////}
-
-
-	//// Rendering here!
-	//{
-	//	DX12Helper& dx12Helper = DX12Helper::GetInstance();
-
-	//	//// Set overall pipeline state
-	//	//commandList->SetPipelineState(pipelineState.Get());
-	//	//// Root sig (must happen before root descriptor table)
-	//	//commandList->SetGraphicsRootSignature(rootSignature.Get());
-	//	//// Set up other commands for rendering
-	//	//commandList->OMSetRenderTargets(1, &rtvHandles[currentSwapBuffer], true, &dsvHandle);
-	//	//commandList->RSSetViewports(1, &viewport);
-	//	//commandList->RSSetScissorRects(1, &scissorRect);
-	//	//
-	//	//commandList->IASetPrimitiveTopology(D3D_PRIMITIVE_TOPOLOGY_TRIANGLELIST);
-
-	//	//Microsoft::WRL::ComPtr<ID3D12DescriptorHeap> descriptorHeap =
-	//	//	dx12Helper.GetCBVSRVDescriptorHeap();
-	//	//commandList->SetDescriptorHeaps(1, descriptorHeap.GetAddressOf());
-
-	//	//// Don't need to remake vsData for each and every object 
-	//	VertexShaderExternalData vsData = {};
-
-
-	//	commandAllocator->Reset();
-	//	//commandAllocators[currentSwapBuffer]->Reset();
-	//	commandList->Reset(commandAllocator.Get(), 0);
-
-	//	// Grab the current back buffer for this frame
-	//	Microsoft::WRL::ComPtr<ID3D12Resource> currentBackBuffer = backBuffers[currentSwapBuffer];
-
-
-	//	// Update raytracing accel structure
-	//	RaytracingHelper::GetInstance(). // Does this create a top level each time? 
-	//		CreateTopLevelAccelerationStructureForScene(entities);
-
-	//	// Perform raytrace, including execution of command list
-	//	RaytracingHelper::GetInstance().Raytrace(
-	//		camera,
-	//		backBuffers[currentSwapBuffer]);
-
-
-
-
-	//	// Info shared by all entities 
-	//	vsData.projection = *camera->GetProjMatrix();
-	//	vsData.view = *camera->GetViewMatrix();
-
-	//	// Draw each entity (per frame data)
-	//	/*
-	//	
-	//	for (std::shared_ptr<Entity> entity : entities)
-	//	{
-	//		vsData.world = entity->GetTransform()->GetWorldMatrix();
-	//		vsData.worldInvTranspose = entity->GetTransform()->GetWorldInverseTransposeMatrix();
-
-	//		std::shared_ptr<Material> mat = entity->GetMaterial();
-	//		commandList->SetPipelineState(mat->GetPipelineState().Get());
-
-	//		// Set the SRV descriptor handle for this material's textures
-	//		// Note: This assumes that descriptor table 2 is for textures (as per our root sig)
-	//		commandList->SetGraphicsRootDescriptorTable(2, mat->GetFinalGPUHandleForTextures());
-
-
-
-	//		// Pixel shader data and cbuffer setup
-	//		{
-	//			PixelShaderExternalData psData = {};
-	//			psData.uvScale = mat->GetuvScale();
-	//			psData.uvOffset = mat->GetuvOffset();
-	//			psData.cameraPosition = *camera->GetTransform()->GetPosition().get();
-	//			psData.lightCount = (int)lights.size();
-	//			memcpy(psData.lights, &lights[0], sizeof(Light) * MAX_LIGHTS);
-	//			// Send this to a chunk of the constant buffer heap
-	//			// and grab the GPU handle for it so we can set it for this draw
-	//				D3D12_GPU_DESCRIPTOR_HANDLE cbHandlePS =
-	//				dx12Helper.FillNextConstantBufferAndGetGPUDescriptorHandle
-	//			(
-	//					(void*)(&psData), sizeof(PixelShaderExternalData));
-	//			// Set this constant buffer handle
-	//			// Note: This assumes that descriptor table 1 is the
-	//			// place to put this particular descriptor. This
-	//			// is based on how we set up our root signature.
-	//			commandList->SetGraphicsRootDescriptorTable(1, cbHandlePS);
-	//		}
-
-
-
-
-
-	//		// Save to GPU 
-	//		auto handle = dx12Helper.FillNextConstantBufferAndGetGPUDescriptorHandle(&vsData, sizeof(vsData));
-
-	//		// Set the handle 
-	//		commandList->SetGraphicsRootDescriptorTable(0, handle);
-
-	//		// Set buffers 
-	//		auto vertexView = entity->GetMesh()->GetVertexView();
-	//		auto indexView = entity->GetMesh()->GetIndexView();
-	//		commandList->IASetVertexBuffers(0, 1, &vertexView);
-	//		commandList->IASetIndexBuffer(&indexView);
-
-	//		commandList->DrawIndexedInstanced(entity->GetMesh()->GetIndexCount(), 1, 0, 0, 0);
-	//	}
-	//	*/
-	//}
-
-	//// Present
-	//{
-	//	// Transition back to present
-	//	D3D12_RESOURCE_BARRIER rb = {};
-	//	rb.Type = D3D12_RESOURCE_BARRIER_TYPE_TRANSITION;
-	//	rb.Flags = D3D12_RESOURCE_BARRIER_FLAG_NONE;
-	//	rb.Transition.pResource = currentBackBuffer.Get();
-	//	rb.Transition.StateBefore = D3D12_RESOURCE_STATE_RENDER_TARGET;
-	//	rb.Transition.StateAfter = D3D12_RESOURCE_STATE_PRESENT;
-	//	rb.Transition.Subresource = D3D12_RESOURCE_BARRIER_ALL_SUBRESOURCES;
-	//	commandList->ResourceBarrier(1, &rb);
-	//	// Must occur BEFORE present
-	//	DX12Helper::GetInstance().CloseExecuteAndResetCommandList();
-	//	// Present the current back buffer
-	//	bool vsyncNecessary = vsync || !deviceSupportsTearing || isFullscreen;
-	//	swapChain->Present(
-	//		vsyncNecessary ? 1 : 0,
-	//		vsyncNecessary ? 0 : DXGI_PRESENT_ALLOW_TEARING);
-	//	// Figure out which buffer is next
-	//	currentSwapBuffer++;
-	//	if (currentSwapBuffer >= numBackBuffers)
-	//		currentSwapBuffer = 0;
-	//}
 }
 
 float Game::InverseLerp(float a, float b, float v)

@@ -1,7 +1,7 @@
 #include "Material.h" 
 #include "DX12Helper.h"
 
-Material::Material(Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState, XMFLOAT3 colorTint, XMFLOAT2 uvScale, XMFLOAT2 uvOffset) :
+Material::Material(Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState, XMFLOAT4 colorTint, XMFLOAT2 uvScale, XMFLOAT2 uvOffset) :
 	pipelineState(pipelineState), colorTint(colorTint), uvScale(uvScale), uvOffset(uvOffset)
 {
 	finalized = false;
@@ -33,7 +33,7 @@ void Material::FinalizeMaterial()
 	finalized = true;
 }
 
-XMFLOAT3 Material::GetColorTint()
+XMFLOAT4 Material::GetColorTint()
 {
 	return colorTint;
 }

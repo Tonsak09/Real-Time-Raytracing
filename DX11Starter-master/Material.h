@@ -10,7 +10,7 @@ using namespace DirectX;
 class Material
 {
 private:
-	XMFLOAT3 colorTint;
+	XMFLOAT4 colorTint;
 	XMFLOAT2 uvScale;
 	XMFLOAT2 uvOffset;
 	bool finalized;
@@ -21,9 +21,9 @@ private:
 	D3D12_GPU_DESCRIPTOR_HANDLE finalGPUHandleForSRVs;
 
 public: 
-	Material(Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState, XMFLOAT3 colorTint, XMFLOAT2 uvScale, XMFLOAT2 uvOffset);
+	Material(Microsoft::WRL::ComPtr<ID3D12PipelineState> pipelineState, XMFLOAT4 colorTint, XMFLOAT2 uvScale, XMFLOAT2 uvOffset);
 
-	XMFLOAT3 GetColorTint();
+	XMFLOAT4 GetColorTint();
 	XMFLOAT2 GetuvScale();
 	XMFLOAT2 GetuvOffset();
 	bool GetFinalized();
