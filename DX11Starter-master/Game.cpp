@@ -289,7 +289,7 @@ void Game::CreateGeometry()
 
 	
 	// Torus's
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 3; i++)
 	{
 		std::shared_ptr<Material> basicMat = std::make_shared<Material>(
 			pipelineState,
@@ -322,7 +322,7 @@ void Game::CreateGeometry()
 	}
 
 	// Spheres 
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 2; i++)
 	{
 		std::shared_ptr<Material> basicMat = std::make_shared<Material>(
 			pipelineState,
@@ -350,7 +350,7 @@ void Game::CreateGeometry()
 	}
 
 	// Cylinders 
-	for (int i = 0; i < 5; i++)
+	for (int i = 0; i < 2; i++)
 	{
 		std::shared_ptr<Material> basicMat = std::make_shared<Material>(
 			pipelineState,
@@ -412,23 +412,6 @@ void Game::CreateGeometry()
 	}
 
 	
-
-	//for (int i = 0; i < 1; i++)
-	//{
-	//	std::shared_ptr<Material> randMat = std::make_shared<Material>(
-	//		pipelineState, 
-	//		DirectX::XMFLOAT3(((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX), // Color
-	//		DirectX::XMFLOAT2(1.0f, 1.0f),		 // UV Scale
-	//		DirectX::XMFLOAT2(0.0f, 0.0f));		 // UV Offset 
-
-	//	//basicMat->AddTexture(dx12Helper.LoadTexture(FixPath(L"../../Assets/Textures/Foil002_4K-JPG_Color.jpg").c_str()), 0);
-	//	//basicMat->AddTexture(dx12Helper.LoadTexture(FixPath(L"../../Assets/Textures/Foil002_4K-JPG_NormalDX.jpg").c_str()), 1);
-	//	//basicMat->AddTexture(dx12Helper.LoadTexture(FixPath(L"../../Assets/Textures/Foil002_4K-JPG_Roughness.jpg").c_str()), 2);
-	//	//basicMat->AddTexture(dx12Helper.LoadTexture(FixPath(L"../../Assets/Textures/Foil002_4K-JPG_Metalness.jpg").c_str()), 3);
-
-	//	randMat->FinalizeMaterial();
-	//	entities.push_back(std::make_shared<Entity>(sphere, randMat));
-	//}
 
 	// Ground
 	std::shared_ptr<Material> mat = std::make_shared<Material>(

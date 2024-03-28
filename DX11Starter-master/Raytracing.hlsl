@@ -37,6 +37,7 @@ cbuffer SceneData : register(b0)
 	matrix inverseViewProjection;
 	float3 cameraPosition;
 	float pad0;
+	bool isRefractive;
 };
 
 
@@ -182,6 +183,11 @@ float3 reflect(float3 v, float3 n)
 	return v - 2.0 * dot(v, n) * n;
 }
 
+float3 refract(float3 uv, float3 normal, float etaiOverEtat)
+{
+	float cosTheta = min(dot(-uv, normal), 1.0);
+	float3 rOutPerp = etaiOverEtat
+}
 
 // === Shaders ===
 
@@ -197,7 +203,7 @@ void RayGen()
 	float3 rayOrigin;
 	float3 rayDirection;
 
-	int raysPerPixel = 25;
+	int raysPerPixel = 5;
 	float3 totalColor = float3(0, 0, 0);
 	for (int i = 0; i < raysPerPixel; i++)
 	{
@@ -232,6 +238,8 @@ void RayGen()
 	// Set the final color of the buffer (gamma corrected)
 	//OutputColor[rayIndices] = float4(pow(payload.color, 1.0f / 2.2f), 1);
 	OutputColor[rayIndices] = float4(pow(totalColor / raysPerPixel, 1.0f / 2.2f), 1);
+
+	OutputColor[rayIndices] = float4(isRefractive, 0, 0, 1);
 }
 
 
@@ -293,12 +301,25 @@ void ClosestHit(inout RayPayload payload, BuiltInTriangleIntersectionAttributes 
 	}
 
 	// Create another recurssive ray 
-	float2 uv = (float2)DispatchRaysIndex() / (float2)DispatchRaysDimensions();
-	float2 rng = rand2(uv * (payload.recursionDepth + 1) + payload.rayPerPixelIndex + RayTCurrent());
+	float3 dir;
 
-	float3 randBounce = RandomCosineWeightedHemisphere(rand(rng), rand(rng.yx), interpolatedVert.normal);
-	float3 refl = reflect(WorldRayDirection(), interpolatedVert.normal);
-	float3 dir = normalize(lerp(refl, randBounce, entityColor[instanceID].a));
+	if (!isRefractive)
+	{
+		// Matte or metalic 
+		float2 uv = (float2)DispatchRaysIndex() / (float2)DispatchRaysDimensions();
+		float2 rng = rand2(uv * (payload.recursionDepth + 1) + payload.rayPerPixelIndex + RayTCurrent());
+
+		float3 randBounce = RandomCosineWeightedHemisphere(rand(rng), rand(rng.yx), interpolatedVert.normal);
+		float3 refl = reflect(WorldRayDirection(), interpolatedVert.normal);
+		float3 dir = normalize(lerp(refl, randBounce, entityColor[instanceID].a));
+	}
+	else
+	{
+		// Refractive 
+
+	}
+
+	
 
 	RayDesc ray;
 	ray.Origin = WorldRayOrigin() + WorldRayDirection() * RayTCurrent() + (dir * 0.1f);

@@ -20,6 +20,8 @@ struct RaytracingSceneData
 {
 	DirectX::XMFLOAT4X4 inverseViewProjection;
 	DirectX::XMFLOAT3 cameraPosition;
+	float pad0;
+	bool isRefractive;
 };
 
 // Ensure this matches Raytracing shader define!
