@@ -29,4 +29,5 @@ struct RaytracingEntityData
 {
 	DirectX::XMFLOAT4 color[MAX_INSTANCES_PER_BLAS];
 	DirectX::XMFLOAT4 lightHue[MAX_INSTANCES_PER_BLAS];
+	DirectX::XMFLOAT3 hardLightPoint;
 };

@@ -46,6 +46,7 @@ cbuffer ObjectData : register(b1)
 {
 	float4 entityColor[MAX_INSTANCES_PER_BLAS];
 	float4 lightHue[MAX_INSTANCES_PER_BLAS];
+    float3 hardLightPoint;
 };
 
 
