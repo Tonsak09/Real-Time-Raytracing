@@ -268,6 +268,12 @@ void Miss(inout RayPayload payload)
 	}
 }
 
+[shader("miss")]
+void Shadow(inout RayPayload payload)
+{
+	// Missing means being able to reach this light source 
+    payload.color += 0.1 * float3(0.5, 0.5, 1.0);
+}
 
 // Closest hit shader - Runs when a ray hits the closest surface
 [shader("closesthit")]
@@ -316,9 +322,10 @@ void ClosestHit(inout RayPayload payload, BuiltInTriangleIntersectionAttributes 
 	float3 refl = reflect(WorldRayDirection(), interpolatedVert.normal);
 	float3 dir = normalize(lerp(refl, randBounce, entityColor[instanceID].a));
 	
+    float3 origin = WorldRayOrigin() + WorldRayDirection() * RayTCurrent();
 
 	RayDesc ray;
-	ray.Origin = WorldRayOrigin() + WorldRayDirection() * RayTCurrent() + (dir * 0.1f);
+    ray.Origin = origin + (dir * 0.1f);
 	ray.Direction = dir;
 	ray.TMin = 0.0001f;
 	ray.TMax = 1000.0f;
@@ -330,10 +337,31 @@ void ClosestHit(inout RayPayload payload, BuiltInTriangleIntersectionAttributes 
 		0xFF,
 		0,
 		0,
-		0,	// Mis shader index 
+		0,	// Miss shader index 
 		ray,
 		payload);
 	
+	
+	
+    float3 shadowDifference = hardLightPoint - origin;
+    float shadowMag = length(shadowDifference);
+	
+    RayDesc shadowRay;
+    ray.Origin = WorldRayOrigin() + WorldRayDirection() * RayTCurrent();
+    ray.Direction = shadowDifference / shadowMag;
+    ray.TMin = 0.0001f;
+    ray.TMax = shadowMag; // To desired location 
+	
 	// Call secondary shadow ray 
 	//  -> Could influcde secondary payload
+    TraceRay(
+		SceneTLAS,
+		RAY_FLAG_NONE,
+		0xFF,
+		0,
+		0,
+		1, // Miss shader index 
+		ray,
+		payload);
+	
 }
