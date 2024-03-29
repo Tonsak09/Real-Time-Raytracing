@@ -37,7 +37,6 @@ cbuffer SceneData : register(b0)
 	matrix inverseViewProjection;
 	float3 cameraPosition;
 	float pad0;
-	bool isRefractive;
 };
 
 
@@ -46,6 +45,7 @@ cbuffer SceneData : register(b0)
 cbuffer ObjectData : register(b1)
 {
 	float4 entityColor[MAX_INSTANCES_PER_BLAS];
+	float4 lightHue[MAX_INSTANCES_PER_BLAS];
 };
 
 
@@ -61,6 +61,8 @@ RaytracingAccelerationStructure SceneTLAS	: register(t0);
 ByteAddressBuffer IndexBuffer        		: register(t1);
 ByteAddressBuffer VertexBuffer				: register(t2);
 
+
+static const float indexOfRefraction = 1.5;
 
 // === Helpers ===
 
@@ -186,7 +188,9 @@ float3 reflect(float3 v, float3 n)
 float3 refract(float3 uv, float3 normal, float etaiOverEtat)
 {
 	float cosTheta = min(dot(-uv, normal), 1.0);
-	float3 rOutPerp = etaiOverEtat
+	float3 rOutPerp = etaiOverEtat * (uv * cosTheta * normal);
+	float3 rOutParallel = -sqrt(abs(1.0 - length(rOutPerp))) * normal;
+	return rOutPerp + rOutParallel;
 }
 
 // === Shaders ===
@@ -238,8 +242,6 @@ void RayGen()
 	// Set the final color of the buffer (gamma corrected)
 	//OutputColor[rayIndices] = float4(pow(payload.color, 1.0f / 2.2f), 1);
 	OutputColor[rayIndices] = float4(pow(totalColor / raysPerPixel, 1.0f / 2.2f), 1);
-
-	OutputColor[rayIndices] = float4(isRefractive, 0, 0, 1);
 }
 
 
@@ -260,7 +262,8 @@ void Miss(inout RayPayload payload)
 	}
 	else
 	{
-		payload.color *= lerp(downColor, upColor, interpolation);
+		// Amient light 
+		payload.color *= 0.1 * lerp(downColor, upColor, interpolation);
 	}
 }
 
@@ -291,34 +294,26 @@ void ClosestHit(inout RayPayload payload, BuiltInTriangleIntersectionAttributes 
 	// Get the data for this entity
 	uint instanceID = InstanceID();
 
-	if (payload.recursionDepth == 0)
+	/*if (isLightSource[instanceID] == true)
 	{
-		payload.color = entityColor[instanceID].rgb;
+		payload.color += entityColor[instanceID].rgb;
 	}
 	else
 	{
 		payload.color *= entityColor[instanceID].rgb;
-	}
+	}*/
+
+	payload.color += lightHue[instanceID].rgb;
+	payload.color *= entityColor[instanceID].rgb;
 
 	// Create another recurssive ray 
-	float3 dir;
+	float2 uv = (float2)DispatchRaysIndex() / (float2)DispatchRaysDimensions();
 
-	if (!isRefractive)
-	{
-		// Matte or metalic 
-		float2 uv = (float2)DispatchRaysIndex() / (float2)DispatchRaysDimensions();
-		float2 rng = rand2(uv * (payload.recursionDepth + 1) + payload.rayPerPixelIndex + RayTCurrent());
+	float2 rng = rand2(uv * (payload.recursionDepth + 1) + payload.rayPerPixelIndex + RayTCurrent());
 
-		float3 randBounce = RandomCosineWeightedHemisphere(rand(rng), rand(rng.yx), interpolatedVert.normal);
-		float3 refl = reflect(WorldRayDirection(), interpolatedVert.normal);
-		float3 dir = normalize(lerp(refl, randBounce, entityColor[instanceID].a));
-	}
-	else
-	{
-		// Refractive 
-
-	}
-
+	float3 randBounce = RandomCosineWeightedHemisphere(rand(rng), rand(rng.yx), interpolatedVert.normal);
+	float3 refl = reflect(WorldRayDirection(), interpolatedVert.normal);
+	float3 dir = normalize(lerp(refl, randBounce, entityColor[instanceID].a));
 	
 
 	RayDesc ray;

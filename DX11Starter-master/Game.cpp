@@ -293,9 +293,10 @@ void Game::CreateGeometry()
 	{
 		std::shared_ptr<Material> basicMat = std::make_shared<Material>(
 			pipelineState,
-			DirectX::XMFLOAT4(((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX), // Color
+			DirectX::XMFLOAT4(((double)rand()) / RAND_MAX * 10.0, ((double)rand()) / RAND_MAX * 10.0, ((double)rand()) / RAND_MAX * 10.0, ((double)rand()) / RAND_MAX), // Color
 			DirectX::XMFLOAT2(1.0f, 1.0f),
-			DirectX::XMFLOAT2(0.0f, 0.0f));
+			DirectX::XMFLOAT2(0.0f, 0.0f),
+			XMFLOAT4(1.0, 1.0, 1.0, 0.0)); // Set to light sources 
 
 
 		basicMat->AddTexture(dx12Helper.LoadTexture(FixPath(L"../../Assets/Textures/Foil002_4K-JPG_Color.jpg").c_str()), 0);
@@ -328,7 +329,8 @@ void Game::CreateGeometry()
 			pipelineState,
 			DirectX::XMFLOAT4(((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX), // Color
 			DirectX::XMFLOAT2(1.0f, 1.0f),
-			DirectX::XMFLOAT2(0.0f, 0.0f));
+			DirectX::XMFLOAT2(0.0f, 0.0f),
+			XMFLOAT4(0.0, 0.0, 0.0, 0.0));
 
 
 		basicMat->AddTexture(dx12Helper.LoadTexture(FixPath(L"../../Assets/Textures/Foil002_4K-JPG_Color.jpg").c_str()), 0);
@@ -356,7 +358,8 @@ void Game::CreateGeometry()
 			pipelineState,
 			DirectX::XMFLOAT4(((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX), // Color
 			DirectX::XMFLOAT2(1.0f, 1.0f),
-			DirectX::XMFLOAT2(0.0f, 0.0f));
+			DirectX::XMFLOAT2(0.0f, 0.0f),
+			XMFLOAT4(0.0, 0.0, 0.0, 0.0));
 
 
 		basicMat->AddTexture(dx12Helper.LoadTexture(FixPath(L"../../Assets/Textures/Foil002_4K-JPG_Color.jpg").c_str()), 0);
@@ -385,7 +388,8 @@ void Game::CreateGeometry()
 			pipelineState,
 			DirectX::XMFLOAT4(((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX), // Color
 			DirectX::XMFLOAT2(1.0f, 1.0f),
-			DirectX::XMFLOAT2(0.0f, 0.0f));
+			DirectX::XMFLOAT2(0.0f, 0.0f),
+			XMFLOAT4(0.0, 0.0, 0.0, 0.0));
 
 
 		basicMat->AddTexture(dx12Helper.LoadTexture(FixPath(L"../../Assets/Textures/Foil002_4K-JPG_Color.jpg").c_str()), 0);
@@ -418,7 +422,8 @@ void Game::CreateGeometry()
 		pipelineState,
 		DirectX::XMFLOAT4(((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, ((double)rand()) / RAND_MAX, 0.0f), // Color
 		DirectX::XMFLOAT2(1.0f, 1.0f),
-		DirectX::XMFLOAT2(0.0f, 0.0f));
+		DirectX::XMFLOAT2(0.0f, 0.0f),
+		XMFLOAT4(0.0, 0.0, 0.0, 0.0));
 
 
 	mat->AddTexture(dx12Helper.LoadTexture(FixPath(L"../../Assets/Textures/Foil002_4K-JPG_Color.jpg").c_str()), 0);
