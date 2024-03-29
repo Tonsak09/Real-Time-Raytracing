@@ -330,7 +330,10 @@ void ClosestHit(inout RayPayload payload, BuiltInTriangleIntersectionAttributes 
 		0xFF,
 		0,
 		0,
-		0,
+		0,	// Mis shader index 
 		ray,
 		payload);
+	
+	// Call secondary shadow ray 
+	//  -> Could influcde secondary payload
 }
